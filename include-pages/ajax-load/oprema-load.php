@@ -1,0 +1,1 @@
+<?php session_start();include("../../Connections/conn.php");//include("levo-filter-oprema.php");include("levo-filter.php");//require_once "../../paginate/Paginated.php";//require_once "../../paginate/DoubleBarLayout.php";include("oprema-lista.php");$niv=array($fblista.$mblista.$flista, $mlista.$aaa, '', $mic, $mac);echo json_encode($niv);?>
