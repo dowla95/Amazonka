@@ -1,0 +1,76 @@
+/* Deafult Margin & Padding */
+/*-- Margin Top --*/
+.plr-120 {
+	padding-left: 120px;
+	padding-right: 120px;
+}
+/* Background Color */
+
+.theme-bg {
+	background: var(--zuto);
+}
+.white-bg {
+	background: #fff;
+}
+.black-bg {
+	background:var(--pbkat) none repeat scroll 0 0;
+}
+.gray-bg {
+	background: #f5f5f5;
+}
+.light-bg {
+	background: #fafafa;
+}
+.input-bg {
+	background: #f3f3f3;
+}
+/* Color */
+.blue {
+	color: #45769f;
+}
+.white {
+	color: #fff;
+}
+.black {
+	color: #333;
+}
+/* black overlay */
+
+[data-overlay] {
+	position: relative;
+}
+[data-overlay]::before {
+	background: #000;
+	content: "";
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: -1;
+}
+[data-overlay="3"]::before {
+	opacity: 0.3;
+}
+[data-overlay="4"]::before {
+	opacity: 0.4;
+}
+[data-overlay="5"]::before {
+	opacity: 0.5;
+}
+[data-overlay="6"]::before {
+	opacity: 0.6;
+}
+[data-overlay="7"]::before {
+	opacity: 0.7;
+}
+[data-overlay="8"]::before {
+	opacity: 0.8;
+}
+[data-overlay="9"]::before {
+	opacity: 0.9;
+}
+.container-fluid {
+	padding-left: 120px;
+	padding-right: 120px;
+}
