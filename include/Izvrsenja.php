@@ -1363,7 +1363,9 @@ $msgr=$arrwords['email_novalid'];
 else 
 { 
 $addItems=""; 
-$addTrans=""; // placanje karticom
+$addTrans="";
+
+// placanje karticom
 if(isset($_POST['nacin']) and $_POST['nacin']==4)
 {
 if(isset($_SESSION['userid']) and $_SESSION['userid']>0)
@@ -1490,7 +1492,7 @@ $currency =   str_replace("|", "\\|", str_replace("\\", "\\\\", $orgCurrency));
 }
 else
 if($_POST['naruci_log']==2) 
-{ 
+{
 $ime=$_POST['ime']; 
 $posta=$_POST['posta']; 
 $grad=$_POST['grad']; 
@@ -1500,7 +1502,7 @@ $email=$_POST['email'];
 $telefon=$_POST['telefon']; 
 }
 elseif($_POST['naruci_log']==1 and $_SESSION['userid']>0) 
-{ 
+{
 $ze=mysqli_query($conn, "SELECT * FROM users_data WHERE user_id=$_SESSION[userid]"); 
 $ze1=mysqli_fetch_array($ze); 
 $ime=$ze1['ime']; 
@@ -1511,6 +1513,60 @@ $adresa=$ze1['ulica_broj'];
 $email=$ze1['email']; 
 $telefon=$ze1['telefon'];  
 }
+
+// placanje kreditom
+if(isset($_POST['nacin']) and $_POST['nacin']==5)
+{
+	
+//uzima ukupnu vrednost racuna
+
+$ukupno=0;
+foreach($_SESSION[$sid] as $key => $value)  
+{ 
+$cena_sum=0;  
+$sum=0; 
+if($key>0) 
+{ 
+$az = mysqli_query($conn, "SELECT p.*, pt.*, p.id as ide
+        FROM pro p 
+        INNER JOIN prol pt ON p.id = pt.id_text 
+        $inner_plus        
+        WHERE pt.lang='$lang' AND p.prodato=0 AND p.akt=1 AND p.id=$key GROUP BY p.id ORDER BY -p.pozicija DESC, pt.naslov");		
+
+$az1=mysqli_fetch_assoc($az);
+$prodavac=mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users_data WHERE user_id=$az1[prodavac]"));
+
+$cenar=$az1['cena'];
+$cena_sum =roundCene($cenar,1)*$value;
+$cena_sum_idost =roundCene($cenar,1)*$value;
+$ukupno +=roundCene($cenar,1)*$value;
+$sum =$value;
+}
+}
+
+$mn=mysqli_query($conn, "SELECT * FROM users_data WHERE user_id=$_SESSION[userid] AND akt='Y'");
+$mn1=mysqli_fetch_assoc($mn);	
+$kredit = $mn1['kredit'];	
+
+//proverava da li korisnik ima dovoljno sredstva na racunu	
+if ($kredit < $ukupno) {	
+echo '<script type="text/javascript">';	
+echo $odgKredita = "Nemate dovoljno sredstava na racunu!";	
+echo 'window.location.assign("<?php echo $patH1?>/<?php echo $all_links[18]?>/");';
+echo '</script>';
+return;	
+}
+else {
+	
+$kredit = $kredit -  $ukupno;
+mysqli_query($conn, "UPDATE users_data SET kredit=$kredit WHERE user_id=$_SESSION[userid] AND akt='Y'");
+
+// echo '<script type="text/javascript">'; 
+// echo "alert('$kredit');";
+// echo '</script>';
+}	
+}
+
 if(isset($_POST['nacin']) and $_POST['nacin']!=4)
 {
 if(isset($_SESSION['userid']) and $_SESSION['userid']>0) 
@@ -1539,11 +1595,11 @@ $msgr=$langa['messag'][33];  $zasend='
 <tr class="cart_menu"> 
 <td class="image" align="left">Slika</td> 
 <td class="description" align="left">Proizvod</td> 
+<td class="description" align="left">Prodavac</td> 
 <td class="price">Cena</td> 
 <td class="quantity">Količina</td>
-<th>Dostava</td>
 <td class="total">Svega</td> 
-<th>Ukupno sa<br>dostavom</td>
+<th>Ukupno</td>
 </tr> 
 </thead> 
 <tbody>'; 
@@ -1579,29 +1635,22 @@ $az = mysqli_query($conn, "SELECT p.*, pt.*, p.id as ide
         FROM pro p 
         INNER JOIN prol pt ON p.id = pt.id_text 
         $inner_plus        
-        WHERE pt.lang='$lang' AND p.prodato=0 AND p.akt=1 AND p.id=$key GROUP BY p.id ORDER BY -p.pozicija DESC, pt.naslov");  
- $az1=mysqli_fetch_assoc($az);
-if(array_sum($prodArr[$az1['prodavac']])>$az1['limit_dostave'])
-$ponisti_iznos_dostave=1;
-else
-$ponisti_iznos_dostave=0;
- if($ponisti_iznos_dostave==1) {
-$dostIznos=0;
-} else if($az1['nova_cena_dostave']>0){
-$dostIznos=roundCene($az1['nova_cena_dostave'])*$value;
-} else if($az1['fiksna_dostava']>0){
-$dostIznos=roundCene($az1['fiksna_dostava'])*$value;
-}
+        WHERE pt.lang='$lang' AND p.prodato=0 AND p.akt=1 AND p.id=$key GROUP BY p.id ORDER BY -p.pozicija DESC, pt.naslov");		
+
+$az1=mysqli_fetch_assoc($az);
+$prodavac=mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users_data WHERE user_id=$az1[prodavac]"));
+
+
 $cenar=$az1['cena'];
 $cena_sum =roundCene($cenar,1)*$value;
-$cena_sum_idost =roundCene($cenar,1)*$value+$dostIznos;
-$ukupno +=roundCene($cenar,1)*$value+$dostIznos;
+$cena_sum_idost =roundCene($cenar,1)*$value;
+$ukupno +=roundCene($cenar,1)*$value;
 $sum =$value;
 if($az1['tip']==4) $zalink=$all_links[2];
 elseif($az1['tip']==6) $zalink=$all_links[48];
 else $zalink=$all_links[3];
 //mysqli_query($conn, "UPDATE poruceno SET kupac=$_SESSION[userid] WHERE id_porudzbine=$zid");
-if(!mysqli_query($conn, "INSERT INTO poruceno SET id_porudzbine=$zid, kupac=$_SESSION[userid], id_pro=$az1[ide], naziv=".safe($az1['naslov']).", cena='".$az1['cena']."', kolicina=$value")) echo mysqli_error();   
+if(!mysqli_query($conn, "INSERT INTO poruceno SET id_porudzbine=$zid, kupac=$_SESSION[userid], id_pro=$az1[ide], naziv=".safe($az1['naslov']).", prodavac=$az1[prodavac], cena='".$az1['cena']."', kolicina=$value")) echo mysqli_error();   
 $zasend .='<tr> 
 <td class="cart_product"> 
 <a href="'.$patH1.'/'.$zalink.'/'.$az1['ulink'].'-'.$az1['id'].'/"> 
@@ -1612,6 +1661,14 @@ $zasend .='<tr>
 <h4><a href="'.$patH1.'/'.$zalink.'/'.$az1['ulink'].'-'.$az1['id'].'/">'.$az1['naslov'].'</a></h4> 
 <p>Web ID: '.$az1['ide'].'</p> 
 </td> 
+<td class="cart_merchant text-center">
+<p>';
+if($prodavac['nazivfirme']==Null)
+$zasend .=($prodavac['ime']);
+else
+$zasend .=($prodavac['nazivfirme']);
+$zasend .='</p>
+</td>
 <td class="cart_price text-center">
 <p>'.format_ceneS($az1['cena'],2).'</p>
 </td> 
@@ -1619,17 +1676,6 @@ $zasend .='<tr>
 <div class="quantity buttons_added"> 
 <input size="2" class="input-text qty text" title="Kolicina" value="'.$value.'" readonly min="1" step="1"> 
 </div> 
-</td> 
-<td class="cart_total text-center">
-<p class="cart_total_price">';
-if($ponisti_iznos_dostave==1)
-$zasend .= "0,00"; else {
-if($az1['nova_cena_dostave']>0)
- $zasend .= format_ceneS($az1['nova_cena_dostave'],2);
- else
-              $zasend .= format_ceneS($az1['fiksna_dostava'],2);
-}
-$zasend .='</p>
 </td>
 <td class="cart_total text-center"> 
 <p class="cart_total_price">'.formatCene($cena_sum,1).'</p>
@@ -1678,6 +1724,7 @@ $racun='<p>Podaci za uplatu:<br>
 ';
 }
 elseif($_POST['nacin']==4) $inacin='Platna kartica';
+elseif($_POST['nacin']==5) $inacin='Kredit';
 else $racun=''; 
 $zasend .='
 <tr> 

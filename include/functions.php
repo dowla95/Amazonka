@@ -1903,7 +1903,7 @@ $cc=$cc-$minus;
 if($idv>0) $vas=" RSD"; else $vas=" &euro;";
 $cc1=sprintf("%4.2f",$cc);
 $cc2=number_format ($cc1, 2, ",", ".");
-return $cc2.$vas;
+return $cc1.$vas;
 }
 function format_ceneED($cc,$idv)
 {
