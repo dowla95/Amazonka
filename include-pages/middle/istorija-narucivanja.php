@@ -16,6 +16,58 @@
     </div>
 
 	<div class="container-fluid">
+
+<?php 
+if(isset($_SESSION['userid']))
+{
+$mn=mysqli_query($conn, "SELECT * FROM users_data WHERE user_id=$_SESSION[userid] AND akt='Y'");
+$mn1=mysqli_fetch_assoc($mn);
+?>
+		<div class="section-title">
+			<h3>Stanje</h3>
+		</div>
+		<div class="row ">			
+			<div class="col-md-2">
+				<p>Vas kredit je: <?php echo $mn1['kredit']?> RSD</p>
+			</div>			
+			<div class="col-md-2">
+				<div class="theme-button product-cart-button float-left collapsed" data-toggle="collapse" data-parent="#prok" href="#prok">Dopuni kredit</button></div>
+			</div>
+			<div class="col-md-3">
+				<div class="theme-button product-cart-button float-left collapsed" data-toggle="collapse" data-parent="#vaucer" href="#vaucer">Dodaj vaucer</button></div>
+			</div>	
+		</div>
+		<div id="prok" class="collapse"><hr>	
+			<div class="row ">			
+				<div class="col-md-2"><p>Izaberite sumu: </p></div>				
+				<div class="col-md-2">						
+					<select name="" class="w-100">
+						<option value="0">500,00 RSD</option>
+						<option value="1">1.000,00 RSD</option>
+						<option value="2">2.000,00 RSD</option>
+						<option value="3">5.000,00 RSD</option>
+					</select>			
+				</div>
+				<div class="col-md-2">
+					<button type="" class="theme-button product-cart-button2"> Nastavi sa uplatom </button>
+				</div>
+			</div>				
+		</div>
+		<div id="vaucer" class="collapse"><hr>	
+			<div class="row">
+				<div class="col-md-2"><p>Unos vaucer-a: </p></div>                    
+				<div class="col-md-7">
+					<div class="input-group">
+							<input class="form-control" type="text" name="promo-kod" maxlength="6" id="promo-kod" <?php echo $isable?> value="<?php echo $_SESSION['promo-kod'] ?>" placeholder="Unesite promo KOD">
+							
+							<a class="theme-button product-cart-button2" id="iskoristi_vaucer" href="#" style="margin-left:10px;">Upotrebi KOD</a>
+							<div id="promo-info" style='width:100%;color:red;'></div>
+						</div>
+					</div>
+				</div>			
+		</div>	
+ <?php } ?>
+		<hr>		
 		<div class="section-title">
 			<h3>Istorija naručivanja</h3>
 		</div>
@@ -85,5 +137,6 @@ else $prlink="#";
 			</div>
 		</div>
 	</div>
+
 
  	

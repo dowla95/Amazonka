@@ -267,11 +267,13 @@ echo korpaZaMejliPrikaz(2);
 echo korpaZaMejliPrikaz(2);
  }
 } else {
+	
 if($load_nestpay_form==1 and isset($_POST['nacin']) and $_POST['nacin']==4)
 {
+	
 ?>
  <center>
-  <?php echo '<h1 class="zeleni-naslov" style="text-align:center">Molimo vas da sačekate! <img src="'.$domen.'/loader.gif" alt="loader" /></h1>'; ?>
+  <?php echo '<h1 class="zeleni-naslov" style="text-align:center">Molimo vas da sačekate! <img src="'.$domen.'/loader.gif" alt="loader" /></h1>';?>
     <form method="post" name="nestpay" action="https://bib.eway2pay.com/fim/est3Dgate">
 		<input type="submit" value="Nastavi sa plaćanjem karticom &raquo;" class="green-btn" />
 		<input type="hidden" name="clientid" value="<?php echo $orgClientId ?>">
@@ -294,7 +296,8 @@ if($load_nestpay_form==1 and isset($_POST['nacin']) and $_POST['nacin']==4)
  	document.nestpay.submit();
 	</script>
 <?php 
-} else {
+}
+else {
 ?>
     <div class="shopping-cart-wrapper pb-70">
         <div class="container-fluid">
@@ -308,10 +311,7 @@ if($load_nestpay_form==1 and isset($_POST['nacin']) and $_POST['nacin']==4)
 				<th>Proizvod</td>
 				<th>Cena</td>
 				<th>Količina</td>
-				<th>Dostava</td>
 				<th>Svega</td>
-				<!--<th>Edit</td>-->
-				<th>Ukupno sa<br>dostavom</td>
 				<th>Izbaci</td>
 			</tr>
 		</thead>
@@ -364,22 +364,11 @@ $az = mysqli_query($conn, "SELECT p.*, pt.*, p.id as ide
         $inner_plus
         WHERE pt.lang='$lang' AND p.akt=1 AND p.id=$key GROUP BY p.id ORDER BY -p.pozicija DESC, pt.naslov");
 $az1=mysqli_fetch_assoc($az);
-if(array_sum($prodArr[$az1['prodavac']])>$az1['limit_dostave'] and $az1['limit_dostave']>0)
-$ponisti_iznos_dostave=1;
-else
-$ponisti_iznos_dostave=0;
 
-if($ponisti_iznos_dostave==1) {
-$dostIznos=0;
-} else if($az1['nova_cena_dostave']>0){
-$dostIznos=roundCene($az1['nova_cena_dostave'])*$value;
-} else if($az1['fiksna_dostava']>0){
-$dostIznos=roundCene($az1['fiksna_dostava'])*$value;
-}
 $cenar=$az1['cena'];
 $cena_sum =roundCene($cenar,1)*$value;
-$cena_sum_idost =roundCene($cenar,1)*$value+$dostIznos;
-$ukupno +=roundCene($cenar)*$value+$dostIznos;
+$cena_sum_idost =roundCene($cenar,1)*$value;
+$ukupno +=roundCene($cenar)*$value;
 $sum =$value;
 $zalink=$all_links[3];
 $bz = mysqli_query($conn, "SELECT p.*, pt.*, p.id as ide
@@ -421,56 +410,10 @@ else { ?>
                                 <input type="button" class="plus" value="+"  onclick="displaySubs1(<?php echo $az1['id']?>,'yes');">
                                 </div>
                             </td>
-							<td>
-							<?php
 
-if($ponisti_iznos_dostave==1)
-echo "0,00"; else {
-if($az1['nova_cena_dostave']>0)
- echo format_ceneS($az1['nova_cena_dostave']*$value,2);
- else
-              echo format_ceneS($az1['fiksna_dostava']*$value,2);
-}
-              ?>
-							</td>
 							<td class="pro-subtotal">
-								<p class="cart_total_price" id="cen<?php echo $az1['ide']?>"><span class="notxt">SVEGA: </span><?php echo formatCene($cena_sum,1)?></p>
+								<p class="cart_total_price" id="cen<?php echo $az1['ide']?>"><span class="notxt">SVEGA: </span><?php echo format_ceneS($cena_sum,2)?></p>
 							</td>
-							<td class="pro-subtotal">
-								<p class="cart_total_price" id="cend<?php echo $az1['ide']?>"><span class="notxt">UKUPNO SA DOSTAVOM: </span><?php echo formatCene($cena_sum_idost,1)?></p>
-							</td>
-<!--
-							<td class="">
-								<a<?php echo $bezo?>  href="javascript:;"><i class="fal fa-pencil-alt ljubicasta display-5"></i></a>
-                		<div class="zamodal" style="display:none;">
-   	<div class="col-xl-12 col-lg-12">
-					<div class="row">
-<?php 
-if(mysqli_num_rows($bz)>0) {
-while($bz1=mysqli_fetch_assoc($bz)) {
-$sta=mysqli_query($conn, "SELECT id_page FROM stavkel WHERE id_page=$bz1[nijansa]");
-$sta1=mysqli_fetch_assoc($sta);
-$sta2=mysqli_query($conn, "SELECT slika FROM stavke WHERE id=$sta1[id_page]");
-$sta3=mysqli_fetch_assoc($sta2);
-?>
-<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 text-center mb-20">
-<a href="<?php echo $patH1?>/<?php echo $zalink?>/<?php echo $bz1['ulink']?>/">
-<img class="img-fluid posto30 posto40 posto50" src="<?php echo $patH?><?php echo GALFOLDER?>/<?php echo $sta3['slika']?>"  title="<?php echo $bz1['titleslike']?>" alt="<?php echo $az1['altslike']?>">
-<img class="img-fluid" src="<?php echo $patH?><?php echo GALFOLDER?>/thumb/<?php echo $bz1['slika']?>" title="<?php echo $bz1['titleslike']?>" alt="<?php echo $az1['altslike']?>">
-</a>
-<br>
-<?php echo $bz1['naslov']?><br>
-<a class="theme-button product-cart-button2" onclick="displaySubsEdit(<?php echo $bz1['ide']?>,'yes',<?php echo $az1['ide']?>)" href="javascript:;"><i class="fal fa-exchange-alt"></i> ZAMENI</a>
-</div>
-<?php 
-}
-}
-?>
-					</div>
-				</div>
-			</div>
-							</td>
--->
 							<td class="pro-remove">
 							<span class="notxt">Izbaci iz korpe </span>
 								<a class="cart_quantity_delete" href="javascript:;" onclick="displaySubs2(<?php echo $az1['id']?>,'drop');"><i class="fa fa-times"></i></a>
@@ -492,9 +435,8 @@ $pdv=$ukupno-$bezpdv;
 ?>
 <tr class="sukupno">
 <td><h4>UKUPNO:</h4></td>
-<td colspan="3">
-<b>Cena bez PDV-a:</b> <i id="bzp"><?php echo formatCene($bezpdv,1) ?>, </i>
-<b>PDV:</b> <i id="pdve"><?php echo formatCene($pdv,1) ?></i>
+<td>
+
 </td>
 <td colspan="2">
 <?php
@@ -508,10 +450,10 @@ $del2="";
 }
 if(formatCene($ukupno,1) == formatCene($ukupno,1, $_SESSION['promo-kod']['vrednost_koda'])) $nono=" d-none"; else $nono="";
 ?>
-<p class="ukupno<?php echo $nono?>"><?php echo $del1.formatCene($ukupno,1).$del2?></p>
+<p class="ukupno<?php echo $nono?>"><?php echo $del1.format_ceneS($ukupno,2).$del2?></p>
 </td>
 <td colspan="2">
-<p class="ukupno-promo ukupno"><?php echo formatCene($ukupno,1, $_SESSION['promo-kod']['vrednost_koda'])?></p>
+<p class="ukupno-promo ukupno"><?php echo format_ceneS($ukupno,2, $_SESSION['promo-kod']['vrednost_koda'])?></p>
 </td>
 </tr>
 					</tbody>
@@ -543,7 +485,7 @@ if(isset($_POST['isporuka']) and (int) filter_var($_POST['isporuka'], FILTER_SAN
 <div class="col-lg-3 col-md-12 mb-sm-20 mb-md-20">
 <h5>Izaberite način plaćanja:</h5>
 <?php 
-$nac=$nac1=$nac2="";
+$nac=$nac1=$nac2=$nac4="";
 if(isset($_SESSION['izf']['nacin']) and $_SESSION['izf']['nacin']==1)
 $nac="checked";
 if(isset($_SESSION['izf']['nacin']) and $_SESSION['izf']['nacin']==2)
@@ -552,14 +494,18 @@ if(isset($_SESSION['izf']['nacin']) and $_SESSION['izf']['nacin']==3)
 $nac2="checked";
 if(isset($_SESSION['izf']['nacin']) and $_SESSION['izf']['nacin']==4)
 $nac3="checked";
+if(isset($_SESSION['izf']['nacin']) and $_SESSION['izf']['nacin']==5)
+$nac4="checked";
 if(isset($_POST['nacin']) and $_POST['nacin']==1) $nac="checked";
 if(isset($_POST['nacin']) and $_POST['nacin']==2) $nac1="checked";
 if(isset($_POST['nacin']) and $_POST['nacin']==3) $nac2="checked";
 if(isset($_POST['nacin']) and $_POST['nacin']==4) $nac3="checked";
+if(isset($_POST['nacin']) and $_POST['nacin']==5) $nac4="checked";
 ?>
 <i class="fas fa-truck mb-10"></i> <input type='radio' <?php echo $nac?> name='nacin' value='1' required> Pouzećem/gotovinski<br>
 <i class="far fa-university" style="margin-right:5px;"></i> <input type='radio' <?php echo $nac1?> name='nacin' value='2'> Uplata na račun<br>
-<i class="far fa-credit-card" style="margin-right:3px;margin-top:8px"></i> <input type='radio' <?php echo $nac3?> name='nacin' value='4'> Karticom online
+<i class="far fa-credit-card" style="margin-right:3px;margin-top:8px"></i> <input type='radio' <?php echo $nac3?> name='nacin' value='4'> Karticom online<br>
+<i class="far fa-wallet" style="margin-right:5px;margin-top:8px"></i> <input type='radio' <?php echo $nac4?> name='nacin' value='5'> Kreditom<br>
 </div>
 <?php
 $placeholdertext="Unesite, ako je potrebno sve što smatrate da je važno za ovu Vašu narudžbu.";
@@ -572,6 +518,7 @@ if(isset($_POST['poruka'])) $poruka=$_POST['poruka'];
 <textarea name="poruka" rows="2" placeholder="<?php echo $placeholdertext?>"><?php echo $poruka?></textarea>
 </div>
 </div>
+<div id="promo-info" style='width:100%;color:red;'><?php echo $odgKredita; ?></div>
 
 <?php
 if($modulArr['promo-kodovi']==1) {
@@ -584,7 +531,7 @@ $ralis='<a class="btn btn-secondary cart-pg" id="upotrebi-kod" href="#" style="m
 }
 ?>
 
-	<div class="shopping-cart-wrapper pb-20 mt-20">
+<!--	<div class="shopping-cart-wrapper pb-20 mt-20">
 		<div class="row">
 			<div class="col-12">
 			
@@ -602,7 +549,7 @@ $ralis='<a class="btn btn-secondary cart-pg" id="upotrebi-kod" href="#" style="m
                     <label class="col-12 col-sm-12 col-md-3" for="input-coupon">Unos promo KOD-a</label>
 					<div class="col-12 col-sm-12 col-md-9">
 						<div class="input-group">
-							<input class="form-control" type="text" name="promo-kod" maxlength="6" id="promo-kod" <?php echo $isable?> value="<?php echo $_SESSION['promo-kod']?$_SESSION['promo-kod']['kod']:"";?>" placeholder="Unesite promo KOD"> <?php echo $ralis?>
+							<input class="form-control" type="text" name="promo-kod" maxlength="6" id="promo-kod" <?php // echo $isable?> value="<?php // echo $_SESSION['promo-kod']?$_SESSION['promo-kod']['kod']:"";?>" placeholder="Unesite promo KOD"> <?php // echo $ralis?>
 							<div id="promo-info" style='width:100%;color:red;'></div>
 						</div>
 					</div>
@@ -613,7 +560,7 @@ $ralis='<a class="btn btn-secondary cart-pg" id="upotrebi-kod" href="#" style="m
 
 			</div>
 		</div>
-	</div>
+	</div> -->
 <?php } ?>
 </div>
 </div>

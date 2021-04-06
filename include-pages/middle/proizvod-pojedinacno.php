@@ -243,12 +243,13 @@ if($dztz1['novo']==1) $nov="NOVO"; else $nov="KORIŠĆENO";
 <?php if($dztz1['lager']==0) echo '<li><span>'.$arrwords2['lager_nema'].'</span></li>'; else echo '<li><span>'.$arrwords2['lager_ima'].'</span></li>';?>
 -->
 <?php
-if($dztz1['vegan']==1) echo '<li><span>Cena dostave: <b>BESPLATNA DOSTAVA!</b></span></li>';
-elseif($dztz1['nova_cena_dostave']==0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['fiksna_dostava'].' RSD</b></span></li>';
-elseif($dztz1['nova_cena_dostave']==0 and $dztz1['limit_dostave']>0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['fiksna_dostava'].' RSD</b></span></li><li><span>Za narudžbine preko <b>'.$dztz1['limit_dostave'].' RSD</b> dostava je besplatna!</span></li>';
-elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']>0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li><li><span>Za narudžbine preko <b>'.$dztz1['limit_dostave'].' RSD</b> dostava je besplatna!</span></li>';
-elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']==0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li>';
-elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li>';
+echo '<li><span>Cena dostave: <b>BESPLATNA DOSTAVA!</b></span></li>';
+//if($dztz1['vegan']==1) echo '<li><span>Cena dostave: <b>BESPLATNA DOSTAVA!</b></span></li>';
+//elseif($dztz1['nova_cena_dostave']==0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['fiksna_dostava'].' RSD</b></span></li>';
+//elseif($dztz1['nova_cena_dostave']==0 and $dztz1['limit_dostave']>0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['fiksna_dostava'].' RSD</b></span></li><li><span>Za narudžbine preko <b>'.$dztz1['limit_dostave'].' RSD</b> dostava je besplatna!</span></li>';
+//elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']>0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li><li><span>Za narudžbine preko <b>'.$dztz1['limit_dostave'].' RSD</b> dostava je besplatna!</span></li>';
+//elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']==0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li>';
+//elseif($dztz1['nova_cena_dostave']>0 and $dztz1['limit_dostave']==0 and $dztz1['fiksna_dostava']>0) echo '<li><span>Cena dostave: <b>'.$dztz1['nova_cena_dostave'].' RSD</b></span></li>';
 
 
 

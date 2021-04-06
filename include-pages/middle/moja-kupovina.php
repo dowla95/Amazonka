@@ -19,6 +19,7 @@ WHERE p.tip=5 AND p.akt=1 AND po.kupac=$_SESSION[userid] AND p.prodato=0 ORDER B
 $prodavac=mysqli_fetch_assoc(mysqli_query($conn, "SELECT nickname FROM users_data WHERE user_id=$fif1[prodavac]"));
 if($fif1['nacin_placanja']==1) $np="Pouzećem/gotovinski";
 elseif($fif1['nacin_placanja']==2) $np="Uplata na račun";
+elseif($fif1['nacin_placanja']==5) $np="Kredit";
 else $np="Karticom online";
 $val="RSD";
 $cena=number_format($fif1['cena'],0,",",".");

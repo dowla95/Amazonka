@@ -19,11 +19,11 @@ echo "<div class='infob'><div class='info_box'><div>$msgr</div></div></div>";
 	<form action="" method="post">
 	<input type="hidden" name="pprodavca" value='1' />
 		<div class="row">
-            <div class="col-md-2 col-sm-12 col-12">
+            <div class="col-md-4 col-sm-12 col-12">
 			<label>Unesite tekući račun <span style='color:red;'>*</span></label>
 				<input type="text" placeholder="Tekući račun" name="racun" value="<?php echo $mn1['tr']?>">
             </div>
-			
+<!--
 			<div class="col-md-3 col-sm-12 col-12">
 			<label for="dostava">Cena dostave (RSD) <span style='color:red;'>*</span></label>
 			<select name="dostava" id="selectBox" onchange="changeFunc();">
@@ -34,12 +34,12 @@ echo "<div class='infob'><div class='info_box'><div>$msgr</div></div></div>";
 			</select>
 			</div>
 			
-			<div class="col-md-3 col-sm-12 col-12" id="limit" style="display:none">
+			<div class="col-md-3 col-sm-12 col-12" id="limit">
 			<label>Limit za besplatnu dostavu (RSD) <span style='color:red;'>*</span></label>
 			<input type="number" name="limit" min="0" value="<?php echo $lim?>" placeholder="<?php echo $placlim?>">
 			</div>
 
-			<div class="col-md-3 col-sm-12 col-12" id="fiksna" style="display:none">
+			<div class="col-md-3 col-sm-12 col-12" id="fiksna">
 			<label>Fiksna cena dostave (RSD)<span style='color:red;'>*</span></label>
 			<input type="number" name="fiksna" min="0" value="<?php echo $fix?>" placeholder="<?php echo $placfix?>">
 			</div>
@@ -56,7 +56,7 @@ else $trenutno="";
 echo $trenutno;
 ?>
             </div>
-			
+-->
 			<div class="col-sm-12">
 				<div class='alert text-right' role="alert"></div>
 				<button type="submit" class="theme-button product-cart-button float-right">Sačuvaj izmene</button>
@@ -78,7 +78,7 @@ $('form').on('focus', 'input[type=number]', function (e) {
 $('form').on('blur', 'input[type=number]', function (e) {
   $(this).off('wheel.disableScroll')
 })
-
+/*
         function changeFunc() {
             var selectBox = document.getElementById("selectBox");
             var selectedValue = selectBox.options[selectBox.selectedIndex].value;
