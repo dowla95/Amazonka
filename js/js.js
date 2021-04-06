@@ -135,6 +135,7 @@ alert("Kliknite na Upotrebi kod kako biste upisani kod iskoristili, a zatim nast
 return false;
 }
 
+
 });
 $(document).on('click', '#upotrebi-kod', function() {
 sev=$("#promo-kod").val();
@@ -146,6 +147,28 @@ type: "POST",
 url: path+"/include/upotrebi-kod.php",
 //data: {promo: sev},
 data: izf,
+cache: false,
+success: function(datas){ 
+if(datas==1) 
+location.reload();
+else
+$("#promo-info").html(datas);
+}
+});
+
+return false;
+});
+
+$(document).on('click', '#iskoristi_vaucer', function() {
+sev=$("#promo-kod").val();
+izf=$("#glavna-forma").serialize();
+path=$("#path").attr("href");
+
+$.ajax({
+type: "POST",
+url: path+"/include/upotrebi-vaucer.php",
+data: {promo: sev},
+//data: izf,
 cache: false,
 success: function(datas){ 
 if(datas==1) 
