@@ -115,6 +115,8 @@ if($mn1['nacin_placanja']==1) $inacin='Plaćanje gotovinski/pouzećem';
 else
 if($mn1['nacin_placanja']==2) $inacin='Uplata na račun';
 else
+if($mn1['nacin_placanja']==5) $inacin='Kredit';
+else
 if($mn1['nacin_placanja']==3) $inacin='Na rate uz -50% popusta na mesečnu pretplatu.';
   $zasend .='                      
   <tr>

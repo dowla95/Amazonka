@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include("Connections/conn.php");
 include(SUBFOLDERS."include/Izvrsenja.php");
 $sid=session_id();
@@ -14,7 +13,6 @@ $_SESSION[$sid][$id]=$_SESSION[$sid][$oldid];
 unset($_SESSION[$sid][$oldid]);
 }
 else
-
 if($tip=="yes")
 {
 if(!isset($_SESSION[$sid][$id]))
@@ -34,17 +32,12 @@ if($tip=="drop")
 if(isset($_SESSION[$sid][$id]))
 unset($_SESSION[$sid][$id]);
 }
-
-
-
 if(isset($_SESSION[$sid]))
 {
-
 $prodArr=array();
 $ponisti_iznos_dostave=0;
 foreach($_SESSION[$sid] as $key => $value)
 {
-
 if($key>0)
 {
 $az = mysqli_query($conn, "SELECT p.*, pt.*, p.id as ide
@@ -128,23 +121,11 @@ $ikorpa .='</a>
                                 <input type="button" class="plus" value="+"  onclick="displaySubs1('.$az1['id'].',\'yes\');">
                                 </div>
                             </td>
-							<td>';
+							';
 
-
-if($ponisti_iznos_dostave==1)
-$ikorpa .= "0,00"; else {
-if($az1['nova_cena_dostave']>0)
- $ikorpa .= format_ceneS($az1['nova_cena_dostave']*$value,2);
- else
-             $ikorpa .=format_ceneS($az1['fiksna_dostava']*$value,2);
-}
-
-							$ikorpa .='</td>
+							$ikorpa .='
 							<td class="pro-subtotal">
-								<p class="cart_total_price" id="cen'.$az1['ide'].'"><span class="notxt">SVEGA: </span>'.formatCene($cena_sum,1).'</p>
-							</td>
-							<td class="pro-subtotal">
-								<p class="cart_total_price" id="cend'.$az1['ide'].'"><span class="notxt">UKUPNO SA DOSTAVOM: </span>'.formatCene($cena_sum_idost,1).'</p>
+								<p class="cart_total_price" id="cen'.$az1['ide'].'"><span class="notxt">SVEGA: </span>'.format_ceneS($cena_sum,2).'</p>
 							</td>
 
 							<td class="pro-remove">
@@ -168,12 +149,9 @@ $pdv=$ukupno-$bezpdv;
 
 $ikorpa .='<tr class="sukupno">
 <td><h4>UKUPNO:</h4></td>
-<td colspan="3">
-<b>Cena bez PDV-a:</b> <i id="bzp">'.formatCene($bezpdv,1).', </i>
-<b>PDV:</b> <i id="pdve">'.formatCene($pdv,1).'</i>
+<td>
 </td>
 <td colspan="2">';
-
 if(isset($_SESSION['promo-kod']['vrednost_koda']) and $_SESSION['promo-kod']['vrednost_koda']>0) {
 $del1="<del>";
 $del2="</del>";
@@ -184,10 +162,10 @@ $del2="";
 }
 if(formatCene($ukupno,1) == formatCene($ukupno,1, $_SESSION['promo-kod']['vrednost_koda'])) $nono=" d-none"; else $nono="";
 
-$ikorpa .='<p class="ukupno'.$nono.'">'.$del1.formatCene($ukupno,1).$del2.'</p>
+$ikorpa .='<p class="ukupno'.$nono.'">'.$del1.format_ceneS($ukupno,2).$del2.'</p>
 </td>
 <td colspan="2">
-<p class="ukupno-promo ukupno">'.formatCene($ukupno,1, $_SESSION['promo-kod']['vrednost_koda']).'</p>
+<p class="ukupno-promo ukupno">'.format_ceneS($ukupno,2, $_SESSION['promo-kod']['vrednost_koda']).'</p>
 </td>
 </tr>';
 
