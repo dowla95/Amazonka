@@ -39,29 +39,32 @@ $br_kodova=$_POST['br_kodova']?$_POST['br_kodova']:"";
 <table style="width:100%;">
 <tr>
 <td>
-<label>VREDNOST KODA  <span style='color:red;'>*</span></label><br />
+<label>VREDNOST KODA (vrednost koda je izrazena u dinarima) <span style='color:red;'>*</span></label><br />
 <input type="text" name='vr_koda' class='selecte' value="<?php echo $vr_koda?>" />
 </td>
 <td>
+<div class='ui-tabs-panel ipad' style="display:none;">
 Procenat ili RSD  <?php echo $zvez?>
-<select name="tip_koda" class='selecte'>
-                      <?php 
-$proc_arr=array("Procenat", "RSD");
-foreach($proc_arr as $k => $v)
-{
-if(isset($_POST['vr_tip']) and $k==$_POST['vr_tip'])
-$che="selected"; else $che="";
-echo "<option value='$k' $che>$v</option>";
-}
-                        ?>
+<select name="tip_koda" class='selecte'><option value="1" selected >RSD</option>
+<?php 
+// U slucaju da se namesta da tip promo-koda bude u procentima ili RSD
+// $proc_arr=array("Procenat", "RSD");
+// foreach($proc_arr as $k => $v)
+// {
+// if(isset($_POST['vr_tip']) and $k==$_POST['vr_tip'])
+// $che="selected"; else $che="";
+// echo "<option value='$k' $che>$v</option>";
+// }
+?>
 </select>
+</div>
 </td>
 </tr>
 </table>
 </div>
 <br />
 <div class='ui-tabs-panel ipad'>
-<label>MINIMALNA POTROSNJA (popuniti samo ako se izabere RSD)</label><br />
+<label>MINIMALNA POTROSNJA</label><br />
 <input type="text" name='min_potrosnja' class='selecte' value="<?php echo $min_potrosnja?>"/>
 </div>
 <br />
@@ -86,7 +89,11 @@ foreach($kar_arr as $k => $v)
 {
 if(isset($_POST['kategorije']) and in_array($k, $_POST['kategorije']))
 $che="selected";
+if($k == 5 )
 echo "<option value='$k' selected>$v</option>";
+else
+echo "<option value='$k' >$v</option>";
+
 }
                         ?>
 </select>
